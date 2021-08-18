@@ -1,4 +1,5 @@
 from desdeo_mcdm.utilities.solvers import solve_pareto_front_representation
+from desdeo_emo.EAs import NSGAIII
 from modules.utils import save
 from modules.GeometryDesign.problem import create_problem
 import numpy as np
@@ -42,8 +43,10 @@ variable_count = 15 # Around 15 - 25 seems to be good enough
 # The method returns a MOProblem and a scalarmethod instance which can be passed to different Desdeo objects
 problem, method = create_problem(variable_count , obj, constraints, pfront = True)
 
+# Two methods to solve the problem are shown below. Do not use them both at the same time!
+# Use one, and comment out the other!
 
-# Example on solving the pareto front : This might take some time so feel free to comment this out.
+# Example on solving the pareto front : This might take some time so feel free to comment this out (lines 57 and 60).
 
 # We will use the solve_pareto_front_representation method but one can change this to something else.
 # The method takes the problem instance and a step size array
@@ -55,6 +58,15 @@ step_sizes = np.array([.5, .2, .2, .2])[obj]
 
 # The method returns the decision vectors and corresponding objective vectors
 var, obj = solve_pareto_front_representation(problem, step_sizes, solver_method= method)
+
+# Example on solving the pareto front using NSGA-III
+
+evolver = NSGAIII(problem)
+
+while evolver.continue_evolution():
+    evolver.iterate()
+
+var, obj = evolver.end()
 
 # save the solution if you wish, make sure to change the name to not accidentally overwrite an existing solution.
 # Saved solutions can be used later to visualize it

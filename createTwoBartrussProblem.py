@@ -1,21 +1,30 @@
 from desdeo_mcdm.utilities.solvers import solve_pareto_front_representation
+from desdeo_emo.EAs import NSGAIII
 from modules.utils import save
 from modules.TwoBarTruss.problem import create_problem
 import numpy as np
 import warnings
-warnings.filterwarnings("ignore") # ignore warnings, the code is obviously perfect but just, you know... :)
+
+warnings.filterwarnings(
+    "ignore"
+)  # ignore warnings, the code is obviously perfect but just, you know... :)
 # And still scipy float warnings arise...
 
 # Creating a two bar truss problem
 
 # a constant load value for the problem
-load = 66 
+load = 66
 
 # Which objectives do you wish to optimize
 # weight, stress, buckling stress and deflection
-obj = np.array([
-    True, True, True, True, # Optimizing all
-])
+obj = np.array(
+    [
+        True,
+        True,
+        True,
+        True,  # Optimizing all
+    ]
+)
 
 # Approximate ideal and nadir for a problem with no constraints
 # nadir = 573, 2950, 535, 9
@@ -25,13 +34,14 @@ obj = np.array([
 # Set constraint for objectives, [lower, upper]
 # If no constraint then set it to None
 # Notice that breaking constraints will result in a penalty and therefore we might get results that break the constraints
-constraints = np.array([
-    [10, 100], #  10 < weight < 100
-    [15, None], # stress > 15
-    [None, 100], # buckling < 100
-    [None, None], # deflection no constraint
-])
-
+constraints = np.array(
+    [
+        [10, 100],  #  10 < weight < 100
+        [15, None],  # stress > 15
+        [None, 100],  # buckling < 100
+        [None, None],  # deflection no constraint
+    ]
+)
 
 
 # To create the problem we can call the create_problem method with the parameters defined earlier
@@ -39,7 +49,7 @@ constraints = np.array([
 problem, method = create_problem(load, obj, constraints)
 
 
-# Example on solving the pareto front : This might take some time so feel free to comment this out.
+# Example on solving the pareto front : This might take some time so feel free to comment this out (lines 52 and 55).
 
 # We will use the solve_pareto_front_representation method but one can change this to something else.
 # The method takes the problem instance and a step size array
@@ -52,6 +62,15 @@ step_sizes = np.array([100, 177, 100, 4])[obj]
 
 # The method returns the decision vectors and corresponding objective vectors
 var, obj = solve_pareto_front_representation(problem, step_sizes)
+
+# Example on solving the pareto front using NSGA-III
+
+evolver = NSGAIII(problem)
+
+while evolver.continue_evolution():
+    evolver.iterate()
+
+var, obj = evolver.end()
 
 # save the solution if you wish, make sure to change the name to not accidentally overwrite an existing solution.
 # Saved solutions can be used later to visualize it
