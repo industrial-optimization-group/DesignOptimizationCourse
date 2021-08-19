@@ -10,7 +10,7 @@ from modules.utils import load
 # surface area, volume, min height and floor area
 
 # First load the solution. For more details on on the solution check the readme file in modules/DataAndVisualization
-obj, var, _nadir, _ideal = load("gd1")
+obj, var, _nadir, _ideal = load("gd1") # Same name as in createGeometryDesignProblem save statement
 
 # You can ignore this part
 # Make sure all values are positive as some of the objectives may be flipped
@@ -29,7 +29,7 @@ axis_names = ["Surface area", "Volume", "Min height", "Floor area"]
 # => close the tent plot => back to objectives plot
 
 # Load a 3d problem
-obj, var, _nadir, _ideal = load("gd2")
+obj, var, _nadir, _ideal = load("gdExample") # Same name as in createGeometryDesignProblem save statement
 obj = abs(obj)
 axis_names = ["Surface area", "Volume", "floor area"]
 

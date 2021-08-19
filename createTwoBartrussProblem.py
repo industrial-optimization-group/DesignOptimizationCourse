@@ -3,6 +3,7 @@ from desdeo_emo.EAs import NSGAIII
 from modules.utils import save
 from modules.TwoBarTruss.problem import create_problem
 import numpy as np
+import pandas as pd
 import warnings
 
 warnings.filterwarnings(
@@ -21,7 +22,7 @@ obj = np.array(
     [
         True,
         True,
-        True,
+        False,
         True,  # Optimizing all
     ]
 )
@@ -58,14 +59,14 @@ problem, method = create_problem(load, obj, constraints)
 # large step sizes => less solutions but faster calculation
 # The create_problem method below will print approximate values of the nadir and ideal
 # This might help you set the step sizes to fit the problem.
-step_sizes = np.array([100, 177, 100, 4])[obj]
+"""step_sizes = np.array([100, 177, 100, 4])[obj]
 
 # The method returns the decision vectors and corresponding objective vectors
-var, obj = solve_pareto_front_representation(problem, step_sizes)
+var, obj = solve_pareto_front_representation(problem, step_sizes)"""
 
-# Example on solving the pareto front using NSGA-III
+# Example on solving the pareto front using NSGA-III or RVEA
 
-evolver = NSGAIII(problem)
+evolver = NSGAIII(problem, population_size=50)
 
 while evolver.continue_evolution():
     evolver.iterate()
@@ -76,3 +77,6 @@ var, obj = evolver.end()
 # Saved solutions can be used later to visualize it
 # The solution will be saved to modules/DataAndVisualization/'name'
 save("tbExample", obj, var, problem.nadir, problem.ideal)
+
+pd.DataFrame(obj).to_csv("objective_vectors_3.csv")
+pd.DataFrame(var).to_csv("decision_vectors_3.csv")

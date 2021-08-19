@@ -30,7 +30,7 @@ scatter(obj, axis_names)
 # You can choose an axis ranges to highlight solutions that fall in those ranges interactively
 
 # Load the problem
-obj2, var2, nadir2, ideal2 = load("tb1")
+obj2, var2, nadir2, ideal2 = load("tb1") # Same name as in createTwoBartrussProblem save statement
 
 # Set axis names
 axis_names = ["weight", "stress", "buckling stress", "deflection"]

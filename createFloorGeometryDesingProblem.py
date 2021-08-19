@@ -5,6 +5,7 @@ from modules.GeometryDesign.problem import (
     create_problem_constant_floor as create_problem,
 )
 import numpy as np
+import pandas as pd
 import warnings
 
 warnings.filterwarnings("ignore")  # ignore warnings :)
@@ -72,3 +73,6 @@ var, obj = evolver.end()
 # Saved solutions can be used later to visualize it
 # The solution will be saved to modules/DataAndVisualization/'name'
 save("gdfExample", obj, var, problem.nadir, problem.ideal)
+
+pd.DataFrame(obj).to_csv("objective_vectors_3.csv")
+pd.DataFrame(var).to_csv("decision_vectors_3.csv")

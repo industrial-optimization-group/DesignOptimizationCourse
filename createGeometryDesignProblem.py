@@ -3,6 +3,7 @@ from desdeo_emo.EAs import NSGAIII
 from modules.utils import save
 from modules.GeometryDesign.problem import create_problem
 import numpy as np
+import pandas as pd
 import warnings
 warnings.filterwarnings("ignore") # ignore warnings :)
 
@@ -54,17 +55,26 @@ problem, method = create_problem(variable_count , obj, constraints, pfront = Tru
 # The method will create reference points from nadir to ideal with these step sizes
 # in this case : ref points = [[5,0,0,0], [4.5, 0, 0, 0], [4, 0, 0, 0] ... [5, 0.2, 0, 0] ... [0, 1, 1, 1]]
 # large step sizes => less solutions but faster calculation
-step_sizes = np.array([.5, .2, .2, .2])[obj]
+#step_sizes = np.array([.5, .2, .2, .2])[obj]
 
 # The method returns the decision vectors and corresponding objective vectors
-var, obj = solve_pareto_front_representation(problem, step_sizes, solver_method= method)
+#var, obj = solve_pareto_front_representation(problem, step_sizes, solver_method= method)
 
 # Example on solving the pareto front using NSGA-III
 
-evolver = NSGAIII(problem)
+evolver = NSGAIII(
+    problem, 
+    population_size=100,
+    n_iterations=10,
+    n_gen_per_iter=100)
 
+
+i=0
 while evolver.continue_evolution():
     evolver.iterate()
+    print(f"Iteration number {i}")
+    i = i+1
+
 
 var, obj = evolver.end()
 
@@ -72,3 +82,6 @@ var, obj = evolver.end()
 # Saved solutions can be used later to visualize it
 # The solution will be saved to modules/DataAndVisualization/'name'
 save("gdExample", obj, var, problem.nadir, problem.ideal)
+
+pd.DataFrame(obj).to_csv("objective_vectors_3.csv")
+pd.DataFrame(var).to_csv("decision_vectors_3.csv")
